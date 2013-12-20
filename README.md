@@ -103,12 +103,6 @@ To get a shell prompt, override the Dockerfile's entrypoint as such
 MIT. See the LICENSE file.
 
 
-## Acknowledgements
-
-We started with the excellent
-[PostgreSQL Docker image from Discourse](https://github.com/srid/discourse-docker/tree/master/postgresql).
-
-
 ## Contributors
 
 * [Kyle Jensen](https://github.com/kljensen)
