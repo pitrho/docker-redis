@@ -17,7 +17,7 @@ SU="su $USER sh -c"
 if [[ -z "$*" ]]; then
 	ARGS=$DEFAULT_CONFIG
 else
-	if [[ "$*" =~ "^--[a-z]" ]]; then
+	if [[ "$*" =~ ^--[a-z] ]]; then
 		ARGS="$DEFAULT_CONFIG $*"
 	else
 		ARGS="$*"
