@@ -49,7 +49,7 @@ data.
 	mkdir -p /tmp/rdata
 
 Now, mount that as a volume when you start up the container and
-tell PostgreSQL to store its data there
+tell Redis to store its data there
 
 	RID=$(docker run -v /tmp/rdata/:/tmp/rdata/ -d $IMGTAG -d /tmp/rdata/)
 	RIP=$(docker inspect -format='{{.NetworkSettings.IPAddress}}' $RID)
