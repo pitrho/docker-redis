@@ -14,19 +14,19 @@ if [ -n "${CRON_TIME}" ]; then
     [ -z "${AWS_DEFAULT_REGION}" ] && { echo "=> AWS_DEFAULT_REGION cannot be empty" && exit 1; }
 
     # Set environment variables to run cron job
-    echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> /etc/cron.d/mysql_backup
-    echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> /etc/cron.d/mysql_backup
-    echo "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> /etc/cron.d/mysql_backup
-    echo "S3_BUCKET=${S3_BUCKET}" >> /etc/cron.d/mysql_backup
-    [ -n "${REDIS_DB}" ] && { echo "REDIS_DB=${REDIS_DB}" >> /etc/cron.d/mysql_backup; }
-    [ -n "${MAX_BACKUPS}" ] && { echo "MAX_BACKUPS=${MAX_BACKUPS}" >> /etc/cron.d/mysql_backup; }
-    [ -n "${EXTRA_OPTS}" ] && { echo "EXTRA_OPTS=${EXTRA_OPTS}" >> /etc/cron.d/mysql_backup; }
-    echo "${CRON_TIME} /backup.sh >> ${BACKUP_LOG} 2>&1" >> /etc/cron.d/mysql_backup
+    echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> /etc/cron.d/redis_backup
+    echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> /etc/cron.d/redis_backup
+    echo "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> /etc/cron.d/redis_backup
+    echo "S3_BUCKET=${S3_BUCKET}" >> /etc/cron.d/redis_backup
+    [ -n "${REDIS_DB}" ] && { echo "REDIS_DB=${REDIS_DB}" >> /etc/cron.d/redis_backup; }
+    [ -n "${MAX_BACKUPS}" ] && { echo "MAX_BACKUPS=${MAX_BACKUPS}" >> /etc/cron.d/redis_backup; }
+    [ -n "${EXTRA_OPTS}" ] && { echo "EXTRA_OPTS=${EXTRA_OPTS}" >> /etc/cron.d/redis_backup; }
+    echo "${CRON_TIME} /backup.sh >> ${BACKUP_LOG} 2>&1" >> /etc/cron.d/redis_backup
 
     # start cron if it's not running
     if [ ! -f /var/run/crond.pid ]; then
         exec /usr/sbin/cron -f &
     fi
 
-    tail -f /var/log/redis/backup.log
+    tail -f $BACKUP_LOG
 fi

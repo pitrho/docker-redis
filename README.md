@@ -1,4 +1,4 @@
-# Docker Precise Redis
+# Docker MongoDB
 
 This repository contains the configuration for building a
 [Redis](http://www.redis.io/) Docker image using
@@ -7,7 +7,7 @@ Docker image
 
 * has a reasonable default Redis configuration;
 * makes it easy to override those defaults; and,
-* makes it easy to persistent your Redis data across container restarts,
+* makes it easy to persist your Redis data across container restarts,
 * makes it easy to backup the redis dump file to AWS S3.
 
 
