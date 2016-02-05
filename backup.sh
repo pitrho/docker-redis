@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REDIS_DB=${REDIS_DB:=dump.rdb}
+REDIS_DUMP_FILE=${REDIS_DUMP_FILE:=dump.rdb}
 REDIS_DATA_DIR=${REDIS_DATA_DIR:=/var/lib/redis}
 
 [ -z "${S3_BUCKET}" ] && { echo "=> S3_BUCKET cannot be empty" && exit 1; }
@@ -9,7 +9,7 @@ REDIS_DATA_DIR=${REDIS_DATA_DIR:=/var/lib/redis}
 [ -z "${AWS_DEFAULT_REGION}" ] && { echo "=> AWS_DEFAULT_REGION cannot be empty" && exit 1; }
 
 MAX_BACKUPS=${MAX_BACKUPS:=30}
-BACKUP_NAME="redis_`date +"%m%d%Y_%H%M%S"`.sql.gz"
+BACKUP_NAME="redis_`date +"%m%d%Y_%H%M%S"`.dump"
 
 echo "=> Backup started ..."
 
@@ -26,7 +26,7 @@ fi
 # Copy the backup to the S3 bucket
 echo "Copying $BACKUP_NAME to S3 ..."
 S3_FILE_PATH="s3://$S3_BUCKET/$BACKUP_NAME"
-/usr/bin/aws s3 cp $REDIS_DATA_DIR/dump.rdb $S3_FILE_PATH
+/usr/bin/aws s3 cp $REDIS_DATA_DIR/$REDIS_DUMP_FILE $S3_FILE_PATH
 
 
 echo "Removing old databse backup files ..."

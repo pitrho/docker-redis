@@ -1,4 +1,4 @@
-# Docker MongoDB
+# Docker Redis
 
 This repository contains the configuration for building a
 [Redis](http://www.redis.io/) Docker image using
@@ -16,7 +16,6 @@ Docker image
 Clone the repository
 
   	git clone https://github.com/pitrho/docker-redis.git
-  	cd docker-redis/ubuntu/14.04
   	./build
 
 De default tag for the new image is pitrho/redis. If you want to specify a
