@@ -19,8 +19,6 @@ if [ -n "${CRON_TIME}" ]; then
     echo "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> /etc/cron.d/redis_backup
     echo "S3_BUCKET=${S3_BUCKET}" >> /etc/cron.d/redis_backup
     [ -n "${REDIS_DB}" ] && { echo "REDIS_DB=${REDIS_DB}" >> /etc/cron.d/redis_backup; }
-    [ -n "${MAX_BACKUPS}" ] && { echo "MAX_BACKUPS=${MAX_BACKUPS}" >> /etc/cron.d/redis_backup; }
-    [ -n "${EXTRA_OPTS}" ] && { echo "EXTRA_OPTS=${EXTRA_OPTS}" >> /etc/cron.d/redis_backup; }
     echo "${CRON_TIME} /backup.sh >> ${BACKUP_LOG} 2>&1" >> /etc/cron.d/redis_backup
 
     # start cron if it's not running
@@ -29,4 +27,6 @@ if [ -n "${CRON_TIME}" ]; then
     fi
 
     tail -f $BACKUP_LOG
+else
+    echo "=> Backups not scheduled. No CRON_TIME found."
 fi

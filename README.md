@@ -75,6 +75,26 @@ Note that the default path where the data is stored inside the container is at
 /var/lib/redis. You can mount a volume at this location to create external
 backups.
 
+## Backups
+
+This image has the ability to upload backups to AWS s3 using a cron schedule. To
+use this, you need to set the following environment variables:
+
+  * `CRON_TIME` = Cron time schedule. Example: `0 5 * * * root`
+  * `S3_BUCKET` = relative s3 bucket path. Example: `bucket/folder1/.../folderN`
+  * `AWS_ACCESS_KEY_ID` = Your aws access key id
+  * `AWS_SECRET_ACCESS_KEY` = Your aws secret key
+  * `AWS_DEFAULT_REGION` = The aws default region. Example: `us-east-1`
+  * `REDIS_DB` = This is optional. Only set it if you have overridden the
+  default database file name (dump.rdb)
+
+Note that the image only uploads backups to s3, but it does not remove any old
+backups. To do this, we suggest you use the s3 lifecycle policies to archive
+and remove old files.
+
+For this to run as a separate container, you must expose the directory /var/lib/redis
+from the main container as a volume, and then use volumes-from in the backup
+container.
 
 ### Playing with the container
 
