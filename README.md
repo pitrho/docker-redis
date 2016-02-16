@@ -3,7 +3,7 @@
 This repository contains the configuration for building a
 [Redis](http://www.redis.io/) Docker image using
 [Ubuntu 14.04 LTS](http://releases.ubuntu.com/trusty/). This particular Redis
-Docker image
+Docker image:
 
 * has a reasonable default Redis configuration;
 * makes it easy to override those defaults; and,
@@ -49,12 +49,20 @@ Clearly, you will need to have a Redis client installed to have the
 
 This image support passing additional arguments to redis-server. To do this,
 set the environment variable EXRTA_OPTS to any additional arguments. For example,
-if you want to override the entire configuration file, simply mount a volume
-to the image (e.g mount at /confg) containing the config file, and set
-EXTRAT_OPTS to the new path.
+if you want to set a password for redis, you could run the image as follows:
 
-    docker run -d -p 6739:6739 -v /local/path/redis.conf:/config/redis.conf -e EXTRAT_OPTS=/config/redis.conf pitrho/redis
+    docker run -d -p 6739:6739 -v /local/path/redis.conf:/config/redis.conf -e EXTRAT_OPTS=--requirepass new_password
 
+### Overriding the standard configuration file
+
+To override the entire configuration file, simply mount a volume
+to the image at path `/etc/redis/redis.conf`.
+
+### Running redis under a different account
+
+By default, redis runs under the `redis` user account. If you need to run it
+under a different user (e.g root), set environment variable `REDIS_RUN_USER` to the new
+account name.    
 
 ## Database data and volumes
 

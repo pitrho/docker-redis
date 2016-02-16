@@ -5,10 +5,10 @@
 #
 REDIS=/usr/local/bin/redis-server
 DEFAULT_CONFIG=/etc/redis/redis.conf
-USER=redis
-SU="su $USER sh -c"
+: ${REDIS_RUN_USER:='redis'}
+SU="su $REDIS_RUN_USER sh -c"
 
-EXTRA_OPTS=${EXTRA_OPTS:=/etc/redis/redis.conf}
+: ${EXTRA_OPTS:=''}
 
 # Set backup schedule
 if [ -n "${CRON_TIME}" ]; then
@@ -17,5 +17,4 @@ fi
 
 # Run the command
 #
-echo "Running $SU $REDIS $EXTRA_OPTS"
-$SU "$REDIS $EXTRA_OPTS"
+$SU "$REDIS $DEFAULT_CONFIG $EXTRA_OPTS"
