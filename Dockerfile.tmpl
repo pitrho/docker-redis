@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install build deps
 #
 RUN apt-get update && apt-get -y -q install \
-	build-essential tcl8.5 wget awscli && \
+	build-essential tcl8.5 wget awscli dnsutils && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Create Redis user and data directory structure
@@ -45,7 +45,7 @@ RUN \
 # Modify the configuration
 #
 RUN sed -i 's/^daemonize yes/daemonize no/' /etc/redis/redis.conf \
-	&& sed -i 's/^#bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf \
+	&& sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf \
 	&& sed -i 's/^logfile \/var\/log\/redis\/redis.log/logfile ""/' /etc/redis/redis.conf
 
 # Set logrotate for REDIS_LOG_DIR
@@ -58,9 +58,9 @@ COPY start_redis.sh /etc/service/redis/run
 COPY backup.sh /backup.sh
 COPY enable_backups.sh /enable_backups.sh
 
-# Expose redis port
+# Expose ports for redis and sentinel
 #
-EXPOSE 6379
+EXPOSE 6379 26379
 
 # Use baseimage-docker's init system.
 #
