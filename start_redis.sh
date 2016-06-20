@@ -58,15 +58,11 @@ if [ -n "${RANCHER_SENTINEL_SERVICE}" -a $ENABLE_SENTINEL = true ]; then
   fi
 fi
 
-if [ $IS_SLAVE = true -a $ENABLE_REDIS = true ]; then
-  sed -i "s/^# slaveof <masterip> <masterport>/slaveof $REDIS_MASTER_IP $REDIS_PORT/" $DEFAULT_CONFIG
-
-  if [ -n $REDIS_PASSWORD ]; then
-    sed -i "s/^# masterauth .*/masterauth $REDIS_PASSWORD/" $DEFAULT_CONFIG
-  fi
-elif [ $IS_SLAVE = false -a $ENABLE_REDIS = true ]; then
-  if [ -n $REDIS_PASSWORD ]; then
-    sed -i "s/^# requirepass .*/requirepass $REDIS_PASSWORD/" $DEFAULT_CONFIG
+if [ $ENABLE_REDIS = true ]; then
+  sed -i "s/^# requirepass .*/requirepass $REDIS_PASSWORD/" $DEFAULT_CONFIG
+  sed -i "s/^# masterauth .*/masterauth $REDIS_PASSWORD/" $DEFAULT_CONFIG
+  if [ $IS_SLAVE = true ]; then
+    sed -i "s/^# slaveof <masterip> <masterport>/slaveof $REDIS_MASTER_IP $REDIS_PORT/" $DEFAULT_CONFIG
   fi
 fi
 
