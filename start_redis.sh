@@ -21,7 +21,11 @@ SU="su $REDIS_RUN_USER sh -c"
 : ${SENTINEL_PARALLEL_SYNCS:=1}
 : ${SENTINEL_FAILOVER_TIMEOUT:=10000}
 : ${REDIS_MASTER_IP:=''}
+# Allow both REDIS_PASSWORD and REDIS_PASS as env variables to maintain
+# backwards compatibility
 : ${REDIS_PASSWORD:=''}
+: ${REDIS_PASS:=$REDIS_PASSWORD}
+
 : ${IS_SLAVE:=false}
 
 if [ -n "${RANCHER_SENTINEL_SERVICE}" -a $ENABLE_SENTINEL = true ]; then
@@ -59,8 +63,11 @@ if [ -n "${RANCHER_SENTINEL_SERVICE}" -a $ENABLE_SENTINEL = true ]; then
 fi
 
 if [ $ENABLE_REDIS = true ]; then
-  sed -i "s/^# requirepass .*/requirepass $REDIS_PASSWORD/" $DEFAULT_CONFIG
-  sed -i "s/^# masterauth .*/masterauth $REDIS_PASSWORD/" $DEFAULT_CONFIG
+  if [ -n "$REDIS_PASS" ]; then
+    sed -i "s/^# requirepass .*/requirepass $REDIS_PASS/" $DEFAULT_CONFIG
+    sed -i "s/^# masterauth .*/masterauth $REDIS_PASS/" $DEFAULT_CONFIG
+  fi
+
   if [ $IS_SLAVE = true ]; then
     sed -i "s/^# slaveof <masterip> <masterport>/slaveof $REDIS_MASTER_IP $REDIS_PORT/" $DEFAULT_CONFIG
   fi
@@ -78,8 +85,8 @@ if [ $ENABLE_SENTINEL =  true ]; then
   echo "sentinel parallel-syncs $SENTINEL_CLUSTER_NAME $SENTINEL_PARALLEL_SYNCS" >> $SENTINEL_CONFIG
   echo "sentinel failover-timeout $SENTINEL_CLUSTER_NAME $SENTINEL_FAILOVER_TIMEOUT" >> $SENTINEL_CONFIG
 
-  if [ -n $REDIS_PASSWORD ]; then
-    echo "sentinel auth-pass $SENTINEL_CLUSTER_NAME $REDIS_PASSWORD" >> $SENTINEL_CONFIG
+  if [ -n $REDIS_PASS ]; then
+    echo "sentinel auth-pass $SENTINEL_CLUSTER_NAME $REDIS_PASS" >> $SENTINEL_CONFIG
   fi
 
   chown $REDIS_RUN_USER:$REDIS_RUN_USER $SENTINEL_CONFIG
