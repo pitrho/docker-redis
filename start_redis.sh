@@ -71,6 +71,10 @@ if [ $ENABLE_REDIS = true ]; then
   if [ $IS_SLAVE = true ]; then
     sed -i "s/^# slaveof <masterip> <masterport>/slaveof $REDIS_MASTER_IP $REDIS_PORT/" $DEFAULT_CONFIG
   fi
+
+  # Ensure proper ownership on /var/lib/redis directory
+  chown -R redis:redis /var/lib/redis
+
 fi
 
 if [ $ENABLE_SENTINEL =  true ]; then
