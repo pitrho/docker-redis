@@ -1,9 +1,9 @@
 #!/bin/bash
 
-ROLE=$(redis-cli INFO | grep role | awk -F ":" '{print $2}')
-if [ $ROLE != 'master']; then
-  exit 0
-fi
+# ROLE=$(redis-cli INFO | grep role | awk -F ":" '{print $2}')
+# if [ $ROLE != 'master']; then
+#   exit 0
+# fi
 
 REDIS_DUMP_FILE=${REDIS_DB:=dump.rdb}
 REDIS_DATA_DIR=${REDIS_DATA_DIR:=/var/lib/redis}

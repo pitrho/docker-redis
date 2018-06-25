@@ -3,7 +3,6 @@
 
 
 BACKUP_LOG="/var/log/redis/backup.log"
-touch $BACKUP_LOG
 
 if [ -n "${CRON_TIME}" ]; then
     echo "=> Configuring cron schedule for database backups ..."
@@ -19,12 +18,18 @@ if [ -n "${CRON_TIME}" ]; then
     echo "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> /etc/cron.d/redis_backup
     echo "S3_BUCKET=${S3_BUCKET}" >> /etc/cron.d/redis_backup
     [ -n "${REDIS_DB}" ] && { echo "REDIS_DB=${REDIS_DB}" >> /etc/cron.d/redis_backup; }
-    echo "${CRON_TIME} /backup.sh >> ${BACKUP_LOG} 2>&1" >> /etc/cron.d/redis_backup
+    echo "${CRON_TIME} root /backup.sh >> ${BACKUP_LOG} 2>&1" >> /etc/cron.d/redis_backup
 
-    # start cron if it's not running
-    if [ ! -f /var/run/crond.pid ]; then
-        exec /usr/sbin/cron -f &
+    # Create the log output file (PIPE) if it does not exist
+    if [ ! -a $BACKUP_LOG ]; then
+        mkfifo $BACKUP_LOG
     fi
+
+    # Clean up services we don't want to run
+    rm -rf /etc/service/redis
+
+    # run my_init
+    /sbin/my_init &
 
     tail -f $BACKUP_LOG
 else
