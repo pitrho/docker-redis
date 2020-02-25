@@ -37,7 +37,11 @@ RUN \
 	cd redis-%%REDIS_VERSION%% && \
 	/usr/bin/make && \
 	/usr/bin/make install && \
-	echo echo -e "6379\n/etc/redis/redis.conf\n${REDIS_LOG_DIR}/redis.log\n${REDIS_DATA_DIR}/\n/usr/local/bin/redis-server\n" | ./utils/install_server.sh && \
+	REDIS_PORT=6379 \
+		REDIS_CONFIG_FILE=/etc/redis/redis.conf \
+		REDIS_LOG_FILE=${REDIS_LOG_DIR}/redis.log \
+		REDIS_DATA_DIR=${REDIS_DATA_DIR} \
+		REDIS_EXECUTABLE=/usr/local/bin/redis-server ./utils/install_server.sh && \
 	update-rc.d -f redis_6379 remove && \
 	cd .. && \
 	rm -rf redis-%%REDIS_VERSION%%
